@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: webflux
+          uri: lb://webflux-app
+          predicates:
+            - Path=/webflux/**
+          filters:
+            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      predicate:
+#        weight:
+#          enabled: false

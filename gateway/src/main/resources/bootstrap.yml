@@ -1,0 +1,70 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: local
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:    # 命名空间来区分环境dev,test
+      discovery:
+        server-addr: ${NACOS_SERV_ADDR:127.0.0.1:8848}
+        namespace: ${spring.profiles.active}
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${NACOS_SERV_ADDR:127.0.0.1:8848}
+        namespace: ${spring.profiles.active}
+        group: DEFAULT_GROUP
+        file-extension: yml
+
+management:   # 不要修改以下参数
+  endpoints:
+    web:
+      exposure:
+        include: 'health'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    inetutils:
+      preferred-networks: ['10.']   # 绑定本地注册网卡
+    nacos:
+      config:
+        enabled: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: stage
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
